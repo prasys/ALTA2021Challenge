@@ -1,6 +1,7 @@
 from simpletransformers.classification import ClassificationModel, ClassificationArgs
 import pandas as pd
 import logging
+import pickle5 as pickle
 
 
 logging.basicConfig(level=logging.INFO)
