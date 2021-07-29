@@ -33,7 +33,7 @@ def parseAbstracts(fileName):
     s = ""
     abstracts = loadXMLcontents(fileName)
     if len(abstracts) == 1:
-        s = parse_text(titles[0])
+        s = parse_text(abstracts[0])
     else:
         for abstract in abstracts:
             texts.append(parse_text(abstract))
