@@ -86,11 +86,11 @@ def loadFileAndParse(filename,XMLFolderPath,truth,docCollections,cleanText):
         temp = line.split()
         if (len(temp)-2) == 1: #if we only have 1 document collection
             truth.append(temp[1]) #append the grade
-            docCollections.append(parseAbstracts(XMLFolderPath+temp[2]+".xml"),cleanText) #parseXML
+            docCollections.append(parseAbstracts(XMLFolderPath+temp[2]+".xml",cleanText)) #parseXML
         elif (len(temp)-2) > 1:
                 for count in range(2,len(temp)):
                     truth.append(temp[1])
-                    docCollections.append(parseAbstracts(XMLFolderPath+temp[count]+".xml"),cleanText) #parseXML  
+                    docCollections.append(parseAbstracts(XMLFolderPath+temp[count]+".xml",cleanText)) #parseXML  
     file1.close()
 
 
