@@ -8,6 +8,15 @@ import sklearn
 
 
 def calcMicroF1(trueP,falseP):
+    """[Caclulates MicroF1 scores using Sklearn implementation]
+
+    Args:
+        trueP ([list]): [True Positives]
+        falseP ([list]): [Predicted Positives]
+
+    Returns:
+        [float]: [Micro F1 Score]
+    """
     return sklearn.metrics.f1_score(trueP,falseP,average='micro')
 
 def calcMacroF1(trueP,falseP):
