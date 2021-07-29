@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup as bs
 import re
 from django.utils.html import strip_tags
 import argparse
-import sys,os
+import os,sys
 
 
 def parse_text(text, patterns=None):
@@ -65,7 +65,7 @@ def main():
     parser.add_argument('--file', default='trainset.txt', type=str)
     parser.add_argument('--XMLdir', default='/trainset/', type=str)
     opt = parser.parse_args()
-    xmlPath = sys.path.append(os.path.realpath(opt.XMLdir))
+    xmlPath = os.path.abspath(os.path.dirname(os.path.abspath(__file__))) + opt.XMLdir
     docCollections = []
     truthLabels = []
     loadFileAndParse(opt.file,xmlPath,truthLabels,docCollections)
