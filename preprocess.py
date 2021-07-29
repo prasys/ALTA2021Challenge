@@ -79,7 +79,8 @@ def main():
     docCollections = []
     truthLabels = []
     loadFileAndParse(opt.file,xmlPath,truthLabels,docCollections)
-    print(docCollections)
+    createAndSaveDataFrame(truthLabels,docCollections,opt.processedFile)
+
 
 
 
