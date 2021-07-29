@@ -25,7 +25,7 @@ model = ClassificationModel(
     'jambo/BiomedNLP-PubMedBERT-base-uncased-abstract-fulltext-finetuned-renet',
     num_labels=3,
     args=model_args,
-    weight=[0., 0.5, 1]
+    weight=[0,0.5,1]
 ) 
 
 # Train the model
