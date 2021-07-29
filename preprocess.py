@@ -64,7 +64,7 @@ def loadFileAndParse(filename,XMLFolderPath,truth,docCollections):
 
 
 def createAndSaveDataFrame(truthLabels,docCollections,fileName):
-    df = pd.DataFrame(list(zip(truthLabels,docCollections)),columns =['Label', 'Abstract'])
+    df = pd.DataFrame(list(zip(docCollections,truthLabels)),columns =['text', 'labels'])
     store = pd.HDFStore(fileName)
 
 
