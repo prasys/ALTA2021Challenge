@@ -8,10 +8,10 @@ transformers_logger = logging.getLogger("transformers")
 transformers_logger.setLevel(logging.WARNING)
 
 # Preparing train data
-train_data = pd.read_hdf('train.h5')
+train_df = pd.read_hdf('train.h5')
 
 # Preparing eval data
-eval_data = pd.read_hdf('dev.h5')
+eval_df = pd.read_hdf('dev.h5')
 
 # Optional model configuration
 model_args = ClassificationArgs()
