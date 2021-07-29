@@ -66,7 +66,7 @@ def loadFileAndParse(filename,XMLFolderPath,truth,docCollections):
 
 def createAndSaveDataFrame(truthLabels,docCollections,fileName):
     le = preprocessing.LabelEncoder()
-    truthLabels = fit_transform(truthLabels)
+    truthLabels = le.fit_transform(truthLabels)
     df = pd.DataFrame(list(zip(docCollections,truthLabels)),columns =['text', 'labels'])
     print(df.head())
     df.to_pickle(fileName)
