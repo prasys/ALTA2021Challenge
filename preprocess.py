@@ -3,6 +3,7 @@ import re
 from django.utils.html import strip_tags
 import argparse
 import os,sys
+import pandas as pd
 
 
 def parse_text(text, patterns=None):
@@ -62,10 +63,17 @@ def loadFileAndParse(filename,XMLFolderPath,truth,docCollections):
     file1.close()
 
 
+def createAndSaveDataFrame(truthLabels,docCollections,fileName):
+    df = pd.DataFrame(list(zip(truthLabels,docCollections)),columns =['Label', 'Abstract'])
+    print(df.head())
+    store = pd.HDFStore(fileName)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--file', default='trainset.txt', type=str)
     parser.add_argument('--XMLdir', default='/trainset/', type=str)
+    parser.add_argument('--processedFile', default='output.h5', type=str)
     opt = parser.parse_args()
     xmlPath = os.path.abspath(os.path.dirname(os.path.abspath(__file__))) + opt.XMLdir
     docCollections = []
