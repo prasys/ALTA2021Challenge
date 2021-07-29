@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup as bs
 import re
 from django.utils.html import strip_tags
 import argparse
+import sys,os
+
 
 def parse_text(text, patterns=None):
     """
@@ -61,11 +63,12 @@ def loadFileAndParse(filename,XMLFolderPath,truth,docCollections):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--file', default='trainset.txt', type=str)
-    parser.add_argument('--XMLdir', default='../trainset/', type=str)
+    parser.add_argument('--XMLdir', default='/trainset/', type=str)
+    xmlPath = sys.path.append(os.path.realpath(opt.XMLdir))
     opt = parser.parse_args()
     docCollections = []
     truthLabels = []
-    loadFileAndParse(opt.file,opt.XMLdir,truthLabels,docCollections)
+    loadFileAndParse(opt.file,xmlPath,truthLabels,docCollections)
     print(docCollections)
 
 
