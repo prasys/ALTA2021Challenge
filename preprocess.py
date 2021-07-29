@@ -31,6 +31,7 @@ def parse_text(text, patterns=None):
 
 def parseAbstracts(fileName):
     s = ""
+    texts = []
     abstracts = loadXMLcontents(fileName)
     if len(abstracts) == 1:
         s = parse_text(abstracts[0])
