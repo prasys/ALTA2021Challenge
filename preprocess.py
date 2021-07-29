@@ -64,8 +64,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--file', default='trainset.txt', type=str)
     parser.add_argument('--XMLdir', default='/trainset/', type=str)
-    xmlPath = sys.path.append(os.path.realpath(opt.XMLdir))
     opt = parser.parse_args()
+    xmlPath = sys.path.append(os.path.realpath(opt.XMLdir))
     docCollections = []
     truthLabels = []
     loadFileAndParse(opt.file,xmlPath,truthLabels,docCollections)
