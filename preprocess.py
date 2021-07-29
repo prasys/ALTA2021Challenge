@@ -40,11 +40,11 @@ def parseAbstracts(fileName):
             s = ''.join(texts)
     return s
 
-def loadXMLcontents(fileName,contents="abstracttext"):
+def loadXMLcontents(fileName,tag="abstracttext"):
     infile = open(fileName,"r")
     contents = infile.read()
     soup = bs(contents,'xml')
-    content = soup.find_all(contents)
+    content = soup.find_all(tag)
     return content
 
 def loadFileAndParse(filename,XMLFolderPath,truth,docCollections):
