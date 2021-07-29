@@ -50,11 +50,11 @@ def loadFileAndParse(filename,XMLFolderPath,truth,docCollections):
         temp = line.split()
         if (len(temp)-2) == 1: #if we only have 1 document collection
             truth.append(temp[1]) #append the grade
-            docCollections.parseAbstracts(XMLFolderPath+temp[2]+".xml") #parseXML
+            docCollections.append(parseAbstracts(XMLFolderPath+temp[2]+".xml")) #parseXML
         elif (len(temp)-2) > 1:
                 for count in range(2,len(temp)):
                     truth.append(temp[1])
-                    docCollections.parseAbstracts(XMLFolderPath+temp[count]+".xml") #parseXML  
+                    docCollections.append(parseAbstracts(XMLFolderPath+temp[count]+".xml")) #parseXML  
     file1.close()
 
 
@@ -65,8 +65,6 @@ def main():
     opt = parser.parse_args()
     docCollections = []
     truthLabels = []
-    print("file is",opt.file)
-    print("dir is",opt.XMLdir)
     loadFileAndParse(opt.file,opt.XMLdir,truthLabels,docCollections)
     print(docCollections)
 
