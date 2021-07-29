@@ -65,6 +65,8 @@ def main():
     opt = parser.parse_args()
     docCollections = []
     truthLabels = []
+    print("file is",opt.file)
+    print("dir is",opt.XMLdir)
     loadFileAndParse(opt.file,opt.XMLdir,truthLabels,docCollections)
     print(docCollections)
 
