@@ -9,15 +9,6 @@ import argparse
 import os,sys
 import wandb
 
-
-eval_metrics = {
-    "macroF1" : calcMacroF1,
-    "microF1" : calcMacroRecall,
-    "macroRecall" : calcMacroRecall,
-    "microRecall" : calcMicroRecall,
-    "Acc" : calcAccScore
-}
-
 def calcMicroF1(trueP,falseP):
     """[Caclulates MicroF1 scores using Sklearn implementation]
 
@@ -57,7 +48,7 @@ model_args = ClassificationArgs()
 model_args.reprocess_input_data = True
 model_args.overwrite_output_dir = True
 model_args.use_multiprocessing = True
-model_args.num_train_epochs=5
+model_args.num_train_epochs=3
 model_args.use_early_stopping= True
 model_args.do_lower_case = True
 model_args.early_stopping_delta = 0.01
@@ -76,39 +67,65 @@ model_args.adam_epsilon = 1e-8 #1e-8 is default
 model_args.polynomial_decay_schedule_lr_end = 1e-7 # 1e-7 is default
 model_args.scheduler = "cosine_schedule_with_warmup"
 model_args.wandb_project = "alta2021"
-model_args.wandb_kwargs = {'name': 'optimize'}
+model_args.wandb_kwargs = {'name': 'pubMedBERT'}
+model_args.train_custom_parameters_only = False
+model_args.custom_parameter_groups = [
+    {
+        "params": ["classifier.weight"],
+        "lr": 1e-10,
+    },
+    {
+        "params": ["classifier.bias"],
+        "lr": 1e-3,
+        "weight_decay": 0.0,
+    },
+]
+# model_args.custom_parameter_groups = [
+#     {
+#         "params": ["classifier.weight", "bert.encoder.layer.10.output.dense.weight"],
+#         "lr": 1e-10,
+#     }
+# ]
 
 # Doing sweep to check our optimisation 
 sweep_config = {
-    "method": "bayes",  # grid, random
+    "method": "grid",  # grid, random
     "metric": {"name": "train_loss", "goal": "minimize"},
     "parameters": {
         "num_train_epochs": {"values": [2, 3, 5]},
-        "learning_rate": {"min": 5e-5, "max": 4e-4},
+        # "learning_rate": {"min": 5e-5, "max": 4e-4},
     },
 }
 
 sweep_id = wandb.sweep(sweep_config, project="alta2021")
 
+eval_metrics = {
+    "macroF1" : calcMacroF1,
+    "microF1" : calcMicroF1,
+    "macroRecall" : calcMacroRecall,
+    "microRecall" : calcMicroRecall,
+    "Acc" : calcAccScore,
+}
 
 def train():
-    wandb.init()
+    # wandb.init()
     model = ClassificationModel(
         'bert',
         # '',
-        'microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract',
+        'cambridgeltl/SapBERT-from-PubMedBERT-fulltext',
         num_labels=3,
         args=model_args,
-        sweep_config=wandb.config,
+        # sweep_config=wandb.config,
         weight=[1.06,0.723,1.47]
     )
+    print(model.get_named_parameters())
     model.train_model(train_df,output_dir='output/best_core3')
     result, model_outputs, wrong_predictions = model.eval_model(eval_df,**eval_metrics)
-    wandb.join()
+    # wandb.join()
 
-wandb.agent(sweep_id, train)
+train()
+# wandb.agent(sweep_id, train)
 
-9
 # Train the model
 
 

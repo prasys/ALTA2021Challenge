@@ -1,5 +1,10 @@
 trainset.txt
 cache_dir/
+output/
+runs/
+wandb/
+*.csv
+outputs/
 *.txt
 *.h5
 cache_dir/cached_dev_bert_128_3_2
@@ -1981,3 +1986,5 @@ trainset/21089236.xml
 trainset/21154363.xml
 =1.6
 blah.py
+output/best_bio/checkpoint-103-epoch-1/config.json
+wandb/run-20210730_151253-2p1a9xe1/files/wandb-summary.json
