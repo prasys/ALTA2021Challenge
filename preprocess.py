@@ -85,17 +85,11 @@ def loadFileAndParse(filename,XMLFolderPath,truth,docCollections,cleanText,tag):
     for line in file1:
         temp = line.split()
         if (len(temp)-2) == 1: #if we only have 1 document collection
-            if temp[1] == 'A' or temp[1] == 'C':
-                truth.append('A') #append the grade
-            else:
-                truth.append(temp[1])
+            truth.append(temp[1])
             docCollections.append(parseAbstracts(XMLFolderPath+temp[2]+".xml",tag,cleanText)) #parseXML
         elif (len(temp)-2) > 1:
                 for count in range(2,len(temp)):
-                    if temp[1] == 'A' or temp[1] == 'C':
-                        truth.append('A') #append the grade
-                    else:
-                        truth.append(temp[1])
+                    truth.append(temp[1])
                     docCollections.append(parseAbstracts(XMLFolderPath+temp[count]+".xml",tag,cleanText)) #parseXML  
     file1.close()
 
