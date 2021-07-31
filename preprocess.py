@@ -74,7 +74,7 @@ def parseAbstracts(fileName,tag,cleanText=True):
     return s
 
 def loadXMLcontents(fileName,tag):
-    infile = open(fileName,"r")
+    infile = open(fileName,"r", encoding="utf8")
     contents = infile.read()
     soup = bs(contents,'xml')
     content = soup.find_all(tag)
