@@ -57,7 +57,7 @@ def parse_text(text, patterns=None):
         final_text = re.sub(pattern, repl, final_text)
     return final_text.strip()
 
-def parseAbstracts(fileName,cleanText=True,tag):
+def parseAbstracts(fileName,tag,cleanText=True):
     s = ""
     texts = []
     abstracts = loadXMLcontents(fileName,tag)
@@ -80,17 +80,23 @@ def loadXMLcontents(fileName,tag):
     content = soup.find_all(tag)
     return content
 
-def loadFileAndParse(filename,XMLFolderPath,truth,docCollections,cleanText):
+def loadFileAndParse(filename,XMLFolderPath,truth,docCollections,cleanText,tag):
     file1 = open(filename, 'r')
     for line in file1:
         temp = line.split()
         if (len(temp)-2) == 1: #if we only have 1 document collection
-            truth.append(temp[1]) #append the grade
-            docCollections.append(parseAbstracts(XMLFolderPath+temp[2]+".xml",cleanText,tag)) #parseXML
+            if temp[1] == 'A' or temp[1] == 'C':
+                truth.append('A') #append the grade
+            else:
+                truth.append(temp[1])
+            docCollections.append(parseAbstracts(XMLFolderPath+temp[2]+".xml",tag,cleanText)) #parseXML
         elif (len(temp)-2) > 1:
                 for count in range(2,len(temp)):
-                    truth.append(temp[1])
-                    docCollections.append(parseAbstracts(XMLFolderPath+temp[count]+".xml",cleanText,tag)) #parseXML  
+                    if temp[1] == 'A' or temp[1] == 'C':
+                        truth.append('A') #append the grade
+                    else:
+                        truth.append(temp[1])
+                    docCollections.append(parseAbstracts(XMLFolderPath+temp[count]+".xml",tag,cleanText)) #parseXML  
     file1.close()
 
 
@@ -114,7 +120,7 @@ def main():
     xmlPath = os.path.abspath(os.path.dirname(os.path.abspath(__file__))) + opt.XMLdir
     docCollections = []
     truthLabels = []
-    loadFileAndParse(opt.file,xmlPath,truthLabels,docCollections,opt.cleanText)
+    loadFileAndParse(opt.file,xmlPath,truthLabels,docCollections,opt.cleanText,opt.XMLTag)
     createAndSaveDataFrame(truthLabels,docCollections,opt.processedFile)
 
 
