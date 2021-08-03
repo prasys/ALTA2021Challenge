@@ -71,7 +71,7 @@ model_args.eval_batch_size = 16
 model_args.sliding_window = False
 model_args.save_steps = -1
 model_args.save_model_every_epoch = False
-model_args.warmup_steps = 10000
+# model_args.warmup_steps = 10000
 # model_args.weight_decay = 0.01
 # model_args.special_tokens_list = SPECIAL_TOKENS
 model_args.adam_epsilon = 1e-8 #1e-8 is default
@@ -79,7 +79,7 @@ model_args.polynomial_decay_schedule_lr_end = 1e-7 # 1e-7 is default
 model_args.scheduler = "cosine_schedule_with_warmup"
 model_args.wandb_project = "alta2021"
 model_args.wandb_kwargs = {'name': 'pubMedBERT'}
-model_args.train_custom_parameters_only = False
+# model_args.train_custom_parameters_only = False
 # model_args.custom_parameter_groups = [
 #     {
 #         "params": ["classifier.weight"],

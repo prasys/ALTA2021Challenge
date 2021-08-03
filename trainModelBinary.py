@@ -52,7 +52,7 @@ model_args = ClassificationArgs()
 model_args.reprocess_input_data = True
 model_args.overwrite_output_dir = True
 model_args.use_multiprocessing = True
-model_args.num_train_epochs=1
+model_args.num_train_epochs=2
 model_args.use_early_stopping= True
 model_args.do_lower_case = False
 model_args.early_stopping_delta = 0.01
@@ -62,9 +62,10 @@ model_args.early_stopping_patience = 5
 model_args.evaluate_during_training_steps = 1000
 model_args.learning_rate = 5e-5 # 4e-4
 model_args.max_seq_length = 128
-model_args.best_model_dir = "output/best_binary"
+model_args.best_model_dir = "output/best_binary_classifier1"
 model_args.train_batch_size = 16
 model_args.eval_batch_size = 16
+# model_args.warmup_steps = 1000
 model_args.sliding_window = False
 model_args.save_steps = -1
 # model_args.special_tokens_list = ["[NUMBER]","[DIGIT]","[PHONE]","[URL]","[EMAIL]"]
@@ -97,7 +98,7 @@ sweep_config = {
     "method": "grid",  # grid, random
     "metric": {"name": "train_loss", "goal": "minimize"},
     "parameters": {
-        "num_train_epochs": {"values": [3]},
+        "num_train_epochs": {"values": [5]},
         # "learning_rate": {"min": 5e-5, "max": 4e-4},
     },
 }
@@ -127,7 +128,7 @@ def train():
         # sweep_config=wandb.config,
         weight=[1.088,0.9248]
     )
-    model.train_model(train_df,output_dir='output/best_binary')
+    model.train_model(train_df,output_dir='output/best_binary_classifier1')
     result, model_outputs, wrong_predictions = model.eval_model(eval_df,**eval_metrics)
     wandb.join()
 
