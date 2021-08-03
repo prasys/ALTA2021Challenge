@@ -6,31 +6,51 @@ import os,sys
 import pandas as pd
 from sklearn import preprocessing
 from cleantext import clean
+import spacy
+import scispacy
+from spacy import displacy
+nlp = spacy.load('en_ner_bc5cdr_md')
+nlp2 = spacy.load("en_core_sci_md") #en_core_sci_md #en_core_web_sm
+nlp3 = spacy.load("en_core_web_sm")
 
 
+def replaceNER(model,s):
+    doc = model(s)
+    return(" ".join([t.text if not t.ent_type_ else t.ent_type_ for t in doc]) )
+
+
+def keepFirstAndLastSentence(text,model=nlp2):
+    doc = model(text)
+    assert doc.has_annotation("SENT_START")
+    a = list(doc.sents)
+    l = len(list(doc.sents))
+    if l != 0:
+        return (a[0].text + a[l-1].text)
+    else:
+        return ("")
+        
+    
+    
+def normalize(comment, lowercase, remove_stopwords):
+    if lowercase:
+        comment = comment.lower()
+    comment = nlp2(comment)
+    lemmatized = list()
+    for word in comment:
+        lemma = word.lemma_.strip()
+        if lemma:
+            if not remove_stopwords:
+                lemmatized.append(lemma)
+    string = " ".join(lemmatized)
+    return string
 
 def clean_text(text):
-    return(clean(text,
-    fix_unicode=True,               # fix various unicode errors
-    to_ascii=True,                  # transliterate to closest ASCII representation
-    lower=True,                     # lowercase text
-    no_line_breaks=False,           # fully strip line breaks as opposed to only normalizing them
-    no_urls=True, #                  # replace all URLs with a special token
-    no_emails=True, #                # replace all email addresses with a special token
-    no_phone_numbers=True,         # replace all phone numbers with a special token
-    no_numbers=True,               # replace all numbers with a special token
-    no_digits=True,                # replace all digits with a special token
-    no_currency_symbols=True,      # replace all currency symbols with a special token
-    no_punct=False,                 # remove punctuations
-    replace_with_punct="",          # instead of removing punctuations you may replace them
-    replace_with_url="",
-    replace_with_email="",
-    replace_with_phone_number="[PHONE]",
-    replace_with_number="[NUMBER]",
-    replace_with_digit="[DIGIT]",
-    replace_with_currency_symbol="",
-    lang="en"
-    ))
+    # text = re.sub("[\(\[].*?[\)\]]", "", text)
+    # text = keepFirstAndLastSentence(text)
+    return text
+    #return(replaceNER(nlp,normalize(text,lowercase=True,remove_stopwords=False)))
+    #return text
+    # return (replaceNER(nlp,replaceNER(nlp3,normalize(text,lowercase=True,remove_stopwords=False))))
 
 
 def parse_text(text, patterns=None):

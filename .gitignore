@@ -1988,3 +1988,10 @@ trainset/21154363.xml
 blah.py
 output/best_bio/checkpoint-103-epoch-1/config.json
 wandb/run-20210730_151253-2p1a9xe1/files/wandb-summary.json
+requests-2.26.0-py2.py3-none-any.whl
+certifi-2021.5.30-py2.py3-none-any.whl
+charset_normalizer-2.0.4-py3-none-any.whl
+en_core_sci_sm-0.4.0.tar.gz
+idna-3.2-py3-none-any.whl
+urllib3-1.26.6-py2.py3-none-any.whl
+__pycache__/tokenize.cpython-36.pyc
