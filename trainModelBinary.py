@@ -10,6 +10,7 @@ import sklearn
 import argparse
 import os,sys
 import wandb
+from sklearn.model_selection import train_test_split
 
 def calcMicroF1(trueP,falseP):
     """[Caclulates MicroF1 scores using Sklearn implementation]
@@ -40,31 +41,36 @@ transformers_logger = logging.getLogger("transformers")
 transformers_logger.setLevel(logging.WARNING)
 
 # Preparing train data
-train_df = pd.read_pickle('trainMinAS.h5')
+train_df = pd.read_pickle('trainMinB.h5') #trainMinAS.h5
 
 # Preparing eval data
-eval_df = pd.read_pickle('devMinAS.h5')
-eval_df['labels'].replace({1: 1, 2: 1}, inplace=True)
-train_df['labels'].replace({1: 1, 2: 1}, inplace=True)
+eval_df = pd.read_pickle('devMinB.h5') #devMinAS.h5
+eval_df = eval_df[eval_df.labels != 1]
+train_df = train_df[train_df.labels != 1]
+eval_df['labels'].replace({1: 0, 2: 1}, inplace=True)
+train_df['labels'].replace({1: 0, 2: 1}, inplace=True)
+train_df, train_test = train_test_split(train_df, test_size=0.25)
 
 # Optional model configuration
 model_args = ClassificationArgs()
 model_args.reprocess_input_data = True
 model_args.overwrite_output_dir = True
-model_args.use_multiprocessing = True
+model_args.use_multiprocessing = False
 model_args.num_train_epochs=2
 model_args.use_early_stopping= True
-model_args.do_lower_case = False
+model_args.do_lower_case = True
 model_args.early_stopping_delta = 0.01
 model_args.early_stopping_metric = "mcc"
-model_args.early_stopping_metric_minimize = False
-model_args.early_stopping_patience = 5
+model_args.early_stopping_metric_minimize = True
+model_args.early_stopping_patience = 3
 model_args.evaluate_during_training_steps = 1000
 model_args.learning_rate = 5e-5 # 4e-4
-model_args.max_seq_length = 128
-model_args.best_model_dir = "output/best_binary_classifier1"
+model_args.max_seq_length = 256
+model_args.best_model_dir = "output/best_binary_classifierAC"
 model_args.train_batch_size = 16
 model_args.eval_batch_size = 16
+model_args.evaluate_during_training = False
+model_args.tokenizer_name = ''
 # model_args.warmup_steps = 1000
 model_args.sliding_window = False
 model_args.save_steps = -1
@@ -74,7 +80,7 @@ model_args.polynomial_decay_schedule_lr_end = 1e-7 # 1e-7 is default
 model_args.scheduler = "linear_schedule_with_warmup"
 model_args.wandb_project = "alta2021"
 model_args.wandb_kwargs = {'name': 'BERT Best'}
-# model_args.train_custom_parameters_only = False
+model_args.train_custom_parameters_only = False
 # model_args.custom_parameter_groups = [
 #     {
 #         "params": ["classifier.weight"],
@@ -88,8 +94,8 @@ model_args.wandb_kwargs = {'name': 'BERT Best'}
 # ]
 # model_args.custom_parameter_groups = [
 #     {
-#         "params": ["classifier.weight", "bert.encoder.layer.10.output.dense.weight"],
-#         "lr": 1e-10,
+#         "params": ["classifier.weight", "classifier.bias"],
+#         "lr": 5e-5,
 #     }
 # ]
 
@@ -98,7 +104,7 @@ sweep_config = {
     "method": "grid",  # grid, random
     "metric": {"name": "train_loss", "goal": "minimize"},
     "parameters": {
-        "num_train_epochs": {"values": [5]},
+        "num_train_epochs": {"values": [3]},
         # "learning_rate": {"min": 5e-5, "max": 4e-4},
     },
 }
@@ -125,14 +131,14 @@ def train():
         'jambo/BiomedNLP-PubMedBERT-base-uncased-abstract-fulltext-finetuned-renet',
         num_labels=2,
         args=model_args,
-        # sweep_config=wandb.config,
+        sweep_config=wandb.config,
         weight=[1.088,0.9248]
     )
-    model.train_model(train_df,output_dir='output/best_binary_classifier1')
+    model.train_model(train_df,output_dir='output/best_binary_classifierAC')
     result, model_outputs, wrong_predictions = model.eval_model(eval_df,**eval_metrics)
     wandb.join()
 
-#train()
+# train()
 wandb.agent(sweep_id, train)
 
 # Train the model

@@ -12,7 +12,7 @@ from spacy import displacy
 nlp = spacy.load('en_ner_bc5cdr_md')
 nlp2 = spacy.load("en_core_sci_md") #en_core_sci_md #en_core_web_sm
 nlp3 = spacy.load("en_core_web_sm")
-
+docID = []
 
 def replaceNER(model,s):
     doc = model(s)

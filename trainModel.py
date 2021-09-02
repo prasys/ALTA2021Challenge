@@ -45,17 +45,17 @@ transformers_logger = logging.getLogger("transformers")
 transformers_logger.setLevel(logging.WARNING)
 
 # Preparing train data
-train_df = pd.read_pickle('trainMinAS.h5') #N  / #Q
+train_df = pd.read_pickle('trainMinB.h5') #N  / #Q #trainMinA256 #devMinAS trainMinB
 
 # Preparing eval data
-eval_df = pd.read_pickle('devMinAS.h5')  #N / #Q
+eval_df = pd.read_pickle('devMinB.h5')  #N / #Q  #devMin2561 devMinB
 
 # Optional model configuration
 model_args = ClassificationArgs()
 model_args.reprocess_input_data = True
 model_args.overwrite_output_dir = True
 model_args.use_multiprocessing = False
-model_args.num_train_epochs=3
+model_args.num_train_epochs=8
 model_args.use_early_stopping= True
 model_args.do_lower_case = True
 model_args.early_stopping_delta = 0.01
@@ -64,33 +64,41 @@ model_args.early_stopping_metric_minimize = False
 model_args.early_stopping_patience = 5
 model_args.evaluate_during_training_steps = 1000
 model_args.max_seq_length = 256
-model_args.learning_rate = 5e-5
-model_args.best_model_dir = "output/best_core4"
+model_args.learning_rate = 4e-5
+model_args.best_model_dir = "output/best_core7"
 model_args.train_batch_size = 16
 model_args.eval_batch_size = 16
 model_args.sliding_window = False
 model_args.save_steps = -1
-model_args.save_model_every_epoch = False
+model_args.save_model_every_epoch = True
 # model_args.warmup_steps = 10000
 # model_args.weight_decay = 0.01
 # model_args.special_tokens_list = SPECIAL_TOKENS
 model_args.adam_epsilon = 1e-8 #1e-8 is default
 model_args.polynomial_decay_schedule_lr_end = 1e-7 # 1e-7 is default
-model_args.scheduler = "cosine_schedule_with_warmup"
+model_args.scheduler = "linear_schedule_with_warmup"
 model_args.wandb_project = "alta2021"
 model_args.wandb_kwargs = {'name': 'pubMedBERT'}
-# model_args.train_custom_parameters_only = False
+model_args.train_custom_parameters_only = False
 # model_args.custom_parameter_groups = [
+#     {
+#         "params": ["bert.pooler.dense.weight"],
+#         "lr": 5e-5,
+#     },
+#     {
+#         "params": ["bert.pooler.dense.bias"],
+#         "lr": 5e-5,
+#     },
 #     {
 #         "params": ["classifier.weight"],
 #         "lr": 2e-5,
 #     },
 #     {
 #         "params": ["classifier.bias"],
-#         "lr": 2e-5,
+#         "lr": 1e-5,
 #         "weight_decay": 0.01,
 #     },
-# ]
+#]
 # model_args.custom_parameter_groups = [
 #     {
 #         "params": ["classifier.weight", "bert.encoder.layer.10.output.dense.weight"],
@@ -125,14 +133,14 @@ def train():
     model = ClassificationModel(
         'bert',
         # '',
-        'jambo/biobert-base-cased-v1.1-finetuned-NCBI-disease',
+        'microsoft/BiomedNLP-PubMedBERT-base-uncased-abstract',
         num_labels=3,
         args=model_args,
         sweep_config=wandb.config,
         weight=[1.06,0.723,1.47]
     )
     print(model.get_named_parameters())
-    model.train_model(train_df,output_dir='output/best_core5')
+    model.train_model(train_df,output_dir='output/best_core7')
     result, model_outputs, wrong_predictions = model.eval_model(eval_df,**eval_metrics)
     wandb.join()
 
