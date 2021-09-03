@@ -29,7 +29,7 @@ def parseDocument(filename,documentID,number):
 
 
 GradeBandC = False
-multiLabel = True
+multiLabel = False
 
 if multiLabel == False:
     if GradeBandC:
@@ -46,7 +46,7 @@ if multiLabel == False:
     
 
 
-eval_df = pd.read_pickle('devMinA.h5') #devMinAS.h5 #devMinB
+eval_df = pd.read_csv('export_alta21_task.csv') #devMinAS.h5 #devMinB
 if multiLabel == False:
     eval_df['tagged'].replace({'A': 0, 'B': 1, 'C' :2}, inplace=True)
 docID = []
@@ -56,6 +56,7 @@ docID = []
 parseDocument("devtestset.txt",docID,0)
 eval_df['CollectionID'] = docID
 eval_df.to_csv('output_to_google.csv')
+print(eval_df.head())
 eval_df['count'] = eval_df['CollectionID']  # copy column for counting
 
 eval_df = eval_df.groupby(['CollectionID']).agg({
