@@ -1,5 +1,5 @@
 #  Quick, get me a Dr.BERT: Automatic Grading of Evidence using  Transfer Learning
-Code related to the ALTA's 2019 Shared Task - "Quick, get me a Dr.BERT: Automatic Grading of Evidence using  Transfer Learning". Our work was presented in ALTA 2021
+Code related to the ALTA's 2021 Shared Task - "Quick, get me a Dr.BERT: Automatic Grading of Evidence using  Transfer Learning". Our work was presented in ALTA 2021
 The 19th Annual Workshop of the Australasian Language Technology Association
 
 
